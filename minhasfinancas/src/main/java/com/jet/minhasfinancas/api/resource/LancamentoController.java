@@ -128,7 +128,7 @@ public class LancamentoController {
 				.valor(lancamento.getValor())
 				.mes(lancamento.getMes())
 				.ano(lancamento.getAno())
-				.status(lancamento.getStatus().name())
+				//.status(lancamento.getStatus().name())
 				.tipo(lancamento.getTipo().name())
 				.usuario(lancamento.getUsuario().getId())
 				.build();
