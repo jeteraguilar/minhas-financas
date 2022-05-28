@@ -34,16 +34,16 @@ public class LancamentoRepositoryTest {
 	
 	@Test
 	public void deveSalvarUmLancamento() {
-		Lancamento lancamento = criarLancamento(); 
+		Lancamento lancamento = criarLancamento();
 		
 		lancamento = repository.save(lancamento);
 		
 		assertThat(lancamento.getId()).isNotNull();
-	}	
-	
+	}
+
 	@Test
 	public void deveDeletarUmLancamento() {
-		Lancamento lancamento = criarEPersisitirUmLancamento();		
+		Lancamento lancamento = criarEPersistirUmLancamento();
 		
 		lancamento = entityManager.find(Lancamento.class, lancamento.getId());
 		
@@ -51,11 +51,12 @@ public class LancamentoRepositoryTest {
 		
 		Lancamento lancamentoInexistente = entityManager.find(Lancamento.class, lancamento.getId());
 		assertThat(lancamentoInexistente).isNull();
-	}	
+	}
+
 	
 	@Test
 	public void deveAtualizarUmLancamento() {
-		Lancamento lancamento = criarEPersisitirUmLancamento();	
+		Lancamento lancamento = criarEPersistirUmLancamento();
 		
 		lancamento.setAno(2018);
 		lancamento.setDescricao("Teste Atualizar");
@@ -63,23 +64,23 @@ public class LancamentoRepositoryTest {
 		
 		repository.save(lancamento);
 		
-		Lancamento lancamentoAtualizado = entityManager.find(Lancamento.class,  lancamento.getId());
+		Lancamento lancamentoAtualizado = entityManager.find(Lancamento.class, lancamento.getId());
 		
 		assertThat(lancamentoAtualizado.getAno()).isEqualTo(2018);
 		assertThat(lancamentoAtualizado.getDescricao()).isEqualTo("Teste Atualizar");
 		assertThat(lancamentoAtualizado.getStatus()).isEqualTo(StatusLancamento.CANCELADO);
-	}	
+	}
 	
 	@Test
 	public void deveBuscarUmLancamentoPorId() {
-		Lancamento lancamento = criarEPersisitirUmLancamento();
+		Lancamento lancamento = criarEPersistirUmLancamento();
 		
 		Optional<Lancamento> lancamentoEncontrado = repository.findById(lancamento.getId());
 		
 		assertThat(lancamentoEncontrado.isPresent()).isTrue();
 	}
-	
-	private Lancamento criarEPersisitirUmLancamento() {
+
+	private Lancamento criarEPersistirUmLancamento() {
 		Lancamento lancamento = criarLancamento();
 		entityManager.persist(lancamento);
 		return lancamento;
@@ -94,6 +95,11 @@ public class LancamentoRepositoryTest {
 									.tipo(TipoLancamento.RECEITA)
 									.status(StatusLancamento.PENDENTE)
 									.dataCadastro(LocalDate.now())
-									.build();		
-	}		
+									.build();
+	}
+	
+	
+	
+	
+	
 }
