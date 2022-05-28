@@ -60,7 +60,8 @@ public class UsuarioServiceTest {
 		Mockito.doThrow(RegraNegocioException.class).when(service).validarEmail("email@email.com");
 		
 		//acao
-		service.salvarUsuario(usuario);
+		org.junit.jupiter.api.Assertions
+		.assertThrows(RegraNegocioException.class, () -> service.salvarUsuario(usuario) ) ;
 		
 		//verificacao
 		Mockito.verify( repository, Mockito.never() ).save(usuario);
@@ -127,6 +128,7 @@ public class UsuarioServiceTest {
 		Mockito.when(repository.existsByEmail(Mockito.anyString())).thenReturn(true);
 		
 		//ação
-		service.validarEmail("email@email.com");
+		org.junit.jupiter.api.Assertions
+		.assertThrows(RegraNegocioException.class, () -> service.validarEmail("email@email.com"));
 	}
 }

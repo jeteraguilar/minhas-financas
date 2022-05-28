@@ -26,38 +26,23 @@ public class UsuarioRepositoryTest {
 	@Autowired
 	UsuarioRepository repository;
 	
-
+	@Autowired
+	TestEntityManager entityManager;
+	
 	@Test
 	public void deveVerificarAExistênciaDeUmEmail() {
 		
 		//cenário
-		Usuario usuario = Usuario.builder().nome("usuario").email("usuario@gmail.com").build();
-		repository.save(usuario);
+		Usuario usuario = criarUsuario();
+		entityManager.persist(usuario);
 		
 		//ação/execução
-		boolean result = repository.existsByEmail("usuarior@gmail.com");
+		boolean result = repository.existsByEmail("usuario@email.com");
 		
 		//verificação
 		Assertions.assertThat(result).isTrue();
 	}	
-
-	@Autowired
-	TestEntityManager entityManager;
-
-	@Test
-	public void deveVerificarAExistenciaDeUmEmail() {
-
-		// cenário
-		Usuario usuario = criarUsuario();
-		entityManager.persist(usuario);
-
-		// ação/execução
-		boolean result = repository.existsByEmail("usuario@email.com");
-
-		// verificação
-		Assertions.assertThat(result).isTrue();
-
-	}
+	
 	
 	@Test
 	public void deveRetornarFalsoQuandoNaoHouverUsuarioCadastradoComOEmail() {
