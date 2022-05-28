@@ -1,19 +1,15 @@
 package com.jet.minhasfinancas.service;
 
-import static org.mockito.Mockito.when;
-
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.jet.minhasfinancas.exception.ErroAutenticacao;
 import com.jet.minhasfinancas.exception.RegraNegocioException;
@@ -21,8 +17,8 @@ import com.jet.minhasfinancas.model.entity.Usuario;
 import com.jet.minhasfinancas.model.repository.UsuarioRepository;
 import com.jet.minhasfinancas.service.impl.UsuarioServiceImpl;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
+
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class UsuarioServiceTest {
 
@@ -32,7 +28,7 @@ public class UsuarioServiceTest {
 	@MockBean
 	UsuarioRepository repository;	
 	
-	@Test(expected = Test.None.class)
+	@Test
 	public void deveSalvarUmUsuario() {
 		//cenário
 		Mockito.doNothing().when(service).validarEmail(Mockito.anyString());
@@ -56,7 +52,7 @@ public class UsuarioServiceTest {
 		
 	}
 	
-	@Test(expected = RegraNegocioException.class)
+	@Test
 	public void naoDeveSalvarUmUsuarioComEmailJaCardastrado() {
 		//cenario
 		String email = "email@email.com";
@@ -71,7 +67,7 @@ public class UsuarioServiceTest {
 		
 	}
 	
-	@Test(expected = Test.None.class)
+	@Test
 	public void deveAutenticarUmUsuarioComSucesso() {
 		//cenário
 		String email = "email@email.com";
@@ -115,7 +111,7 @@ public class UsuarioServiceTest {
 		Assertions.assertThat(exception).isInstanceOf(ErroAutenticacao.class).hasMessage("Senha inválida");
 	}
 	
-	@Test(expected = Test.None.class)
+	@Test
 	public void deveValidarEmail() {
 		
 		//cenário				
@@ -124,7 +120,7 @@ public class UsuarioServiceTest {
 		//ação
 		service.validarEmail("email@email.com");
 	}
-	@Test(expected = RegraNegocioException.class)
+	@Test
 	public void deveLancarErroAoValidarEmailQuandoExistirEmailCadastrado() {
 		
 		//cenário

@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.domain.Example;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.jet.minhasfinancas.exception.RegraNegocioException;
 import com.jet.minhasfinancas.model.entity.Lancamento;
@@ -24,7 +23,7 @@ import com.jet.minhasfinancas.model.repository.LancamentoRepository;
 import com.jet.minhasfinancas.model.repository.LancamentoRepositoryTest;
 import com.jet.minhasfinancas.service.impl.LancamentoServiceImpl;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class LancamentoServiceTest {
 
