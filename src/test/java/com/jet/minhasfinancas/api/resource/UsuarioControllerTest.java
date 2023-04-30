@@ -1,6 +1,9 @@
 package com.jet.minhasfinancas.api.resource;
 
 
+import java.math.BigDecimal;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -38,7 +41,7 @@ public class UsuarioControllerTest {
 	MockMvc mvc;
 	
 	@MockBean
-	UsuarioService service;	
+	UsuarioService service;
 	
 	@MockBean
 	LancamentoService lancamentoService;
@@ -49,11 +52,9 @@ public class UsuarioControllerTest {
 		String email = "usuario@email.com";
 		String senha = "123";
 		
-		UsuarioDTO dto = UsuarioDTO.builder().email(email).senha(senha).build();		
-		Usuario usuario = Usuario.builder().email(email).senha(senha).build();
-		
+		UsuarioDTO dto = UsuarioDTO.builder().email(email).senha(senha).build();
+		Usuario usuario = Usuario.builder().id(1l).email(email).senha(senha).build();
 		Mockito.when( service.autenticar(email, senha) ).thenReturn(usuario);
-		
 		String json = new ObjectMapper().writeValueAsString(dto);
 		
 		//execucao e verificacao
@@ -62,13 +63,17 @@ public class UsuarioControllerTest {
 													.accept( JSON )
 													.contentType( JSON )
 													.content(json);
+		
+		
 		mvc
 			.perform(request)
-			.andExpect( MockMvcResultMatchers.status().isOk() )
-			.andExpect( MockMvcResultMatchers.jsonPath("id").value(usuario.getId()) )
-			.andExpect( MockMvcResultMatchers.jsonPath("nome").value(usuario.getNome()) )
-			.andExpect( MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail()) )
-			;
+			.andExpect( MockMvcResultMatchers.status().isOk()  )
+			.andExpect( MockMvcResultMatchers.jsonPath("id").value(usuario.getId())  )
+			.andExpect( MockMvcResultMatchers.jsonPath("nome").value(usuario.getNome())  )
+			.andExpect( MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail())  )
+			
+		;
+		
 	}
 	
 	@Test
@@ -77,8 +82,7 @@ public class UsuarioControllerTest {
 		String email = "usuario@email.com";
 		String senha = "123";
 		
-		UsuarioDTO dto = UsuarioDTO.builder().email(email).senha(senha).build();		
-				
+		UsuarioDTO dto = UsuarioDTO.builder().email(email).senha(senha).build();
 		Mockito.when( service.autenticar(email, senha) ).thenThrow(ErroAutenticacao.class);
 		
 		String json = new ObjectMapper().writeValueAsString(dto);
@@ -89,9 +93,14 @@ public class UsuarioControllerTest {
 													.accept( JSON )
 													.contentType( JSON )
 													.content(json);
+		
+		
 		mvc
 			.perform(request)
-			.andExpect( MockMvcResultMatchers.status().isBadRequest() );
+			.andExpect( MockMvcResultMatchers.status().isBadRequest()  );
+			
+		;
+		
 	}
 	
 	@Test
@@ -100,26 +109,29 @@ public class UsuarioControllerTest {
 		String email = "usuario@email.com";
 		String senha = "123";
 		
-		UsuarioDTO dto = UsuarioDTO.builder().email("usuario@email.com").senha("123").build();		
-		Usuario usuario = Usuario.builder().email(email).senha(senha).build();
+		UsuarioDTO dto = UsuarioDTO.builder().email("usuario@email.com").senha("123").build();
+		Usuario usuario = Usuario.builder().id(1l).email(email).senha(senha).build();
 		
 		Mockito.when( service.salvarUsuario(Mockito.any(Usuario.class)) ).thenReturn(usuario);
-		
 		String json = new ObjectMapper().writeValueAsString(dto);
 		
 		//execucao e verificacao
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-													.post( API )
+													.post( API  )
 													.accept( JSON )
 													.contentType( JSON )
 													.content(json);
+		
+		
 		mvc
 			.perform(request)
-			.andExpect( MockMvcResultMatchers.status().isCreated() )
-			.andExpect( MockMvcResultMatchers.jsonPath("id").value(usuario.getId()) )
-			.andExpect( MockMvcResultMatchers.jsonPath("nome").value(usuario.getNome()) )
-			.andExpect( MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail()) )
-			;
+			.andExpect( MockMvcResultMatchers.status().isCreated()  )
+			.andExpect( MockMvcResultMatchers.jsonPath("id").value(usuario.getId())  )
+			.andExpect( MockMvcResultMatchers.jsonPath("nome").value(usuario.getNome())  )
+			.andExpect( MockMvcResultMatchers.jsonPath("email").value(usuario.getEmail())  )
+			
+		;
+		
 	}
 	
 	@Test
@@ -128,20 +140,66 @@ public class UsuarioControllerTest {
 		String email = "usuario@email.com";
 		String senha = "123";
 		
-		UsuarioDTO dto = UsuarioDTO.builder().email("usuario@email.com").senha("123").build();		
+		UsuarioDTO dto = UsuarioDTO.builder().email("usuario@email.com").senha("123").build();
 		
-		
-		Mockito.when( service.salvarUsuario(Mockito.any(Usuario.class)) ).thenThrow(RegraNegocioException.class);		
+		Mockito.when( service.salvarUsuario(Mockito.any(Usuario.class)) ).thenThrow(RegraNegocioException.class);
 		String json = new ObjectMapper().writeValueAsString(dto);
 		
 		//execucao e verificacao
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-													.post( API )
+													.post( API  )
 													.accept( JSON )
 													.contentType( JSON )
 													.content(json);
+		
+		
 		mvc
 			.perform(request)
-			.andExpect( MockMvcResultMatchers.status().isBadRequest() );		
+			.andExpect( MockMvcResultMatchers.status().isBadRequest()  );
+			
+		;
+		
 	}
+	
+	@Test
+	public void deveObterOSaldoDoUsuario() throws Exception {
+		
+		//cenário
+		
+		BigDecimal saldo = BigDecimal.valueOf(10);
+		Usuario usuario = Usuario.builder().id(1l).email("usuario@email.com").senha( "123").build();
+		Mockito.when(service.obterPorId(1l)).thenReturn(Optional.of(usuario));
+		Mockito.when(lancamentoService.obterSaldoPorUsuario(1l)).thenReturn(saldo);
+		
+		
+		//execucao e verificacao
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.get( API.concat("/1/saldo")  )
+													.accept( JSON )
+													.contentType( JSON );
+		mvc
+			.perform(request)
+			.andExpect( MockMvcResultMatchers.status().isOk() )
+			.andExpect( MockMvcResultMatchers.content().string("10") );
+		
+	}
+	
+	@Test
+	public void deveRetornarResourceNotFoundQuandoUsuarioNaoExisteParaObterOSaldo() throws Exception {
+		
+		//cenário
+		Mockito.when(service.obterPorId(1l)).thenReturn(Optional.empty());
+		
+		
+		//execucao e verificacao
+		MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+													.get( API.concat("/1/saldo")  )
+													.accept( JSON )
+													.contentType( JSON );
+		mvc
+			.perform(request)
+			.andExpect( MockMvcResultMatchers.status().isNotFound() );
+		
+	}
+
 }
