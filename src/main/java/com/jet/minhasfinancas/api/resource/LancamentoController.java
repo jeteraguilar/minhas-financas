@@ -39,6 +39,7 @@ public class LancamentoController {
 	public ResponseEntity buscar(
 			@RequestParam(value ="descricao" , required = false) String descricao,
 			@RequestParam(value = "mes", required = false) Integer mes,
+			@RequestParam(value = "vencRec", required = false) Integer vencRec,
 			@RequestParam(value = "ano", required = false) Integer ano,
 			@RequestParam("usuario") Long idUsuario
 			) {
@@ -46,6 +47,7 @@ public class LancamentoController {
 		Lancamento lancamentoFiltro = new Lancamento();
 		lancamentoFiltro.setDescricao(descricao);
 		lancamentoFiltro.setMes(mes);
+		lancamentoFiltro.setVencRec(vencRec);
 		lancamentoFiltro.setAno(ano);
 		
 		Optional<Usuario> usuario = usuarioService.obterPorId(idUsuario);
@@ -128,6 +130,7 @@ public class LancamentoController {
 					.descricao(lancamento.getDescricao())
 					.valor(lancamento.getValor())
 					.mes(lancamento.getMes())
+					.vencRec(lancamento.getVencRec())
 					.ano(lancamento.getAno())
 					.status(lancamento.getStatus().name())
 					.tipo(lancamento.getTipo().name())
@@ -142,6 +145,7 @@ public class LancamentoController {
 		lancamento.setDescricao(dto.getDescricao());
 		lancamento.setAno(dto.getAno());
 		lancamento.setMes(dto.getMes());
+		lancamento.setVencRec(dto.getVencRec());
 		lancamento.setValor(dto.getValor());
 		
 		Usuario usuario = usuarioService

@@ -44,6 +44,9 @@ public class Lancamento {
 	@Column(name = "mes")
 	private Integer mes;
 	
+	@Column(name = "venc_rec")
+	private Integer vencRec;
+	
 	@Column(name = "ano")
 	private Integer ano;
 	
@@ -51,7 +54,7 @@ public class Lancamento {
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 	
-	@Column(name = "valor")
+	@Column(name = "valor", precision = 12, scale = 2)
 	private BigDecimal valor;
 	
 	@Column(name = "data_cadastro")
